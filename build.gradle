@@ -1,19 +1,69 @@
 plugins {
-    id 'java'
+    id 'java-library'
+    id 'maven-publish'
 }
 
-group 'org.example'
+apply plugin: 'maven-publish'
+group 'gr8.tech'
 version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
 }
 
+ext {
+    restAssured = '5.3.0'
+    lombokVersion = '1.18.26'
+    jacksonVersion = '2.14.2'
+    log4jVersion = '2.20.0'
+    junitVersion = '5.9.2'
+    junitPlatformVersion = '1.9.2'
+    aeonbitsVersion = '1.0.12'
+}
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    implementation "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+    implementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    implementation "org.junit.platform:junit-platform-launcher:$junitPlatformVersion"
+
+    implementation "io.rest-assured:rest-assured:$restAssured"
+
+    implementation "org.projectlombok:lombok:$lombokVersion"
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+
+    implementation "org.aeonbits.owner:owner-java8:$aeonbitsVersion"
+
+    implementation 'org.slf4j:slf4j-reload4j:2.0.5'
+    implementation "org.apache.logging.log4j:log4j-api:$log4jVersion"
+    implementation "org.apache.logging.log4j:log4j-core:$log4jVersion"
+
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+
+    implementation 'com.google.code.gson:gson:2.9.0'
+
+    implementation 'com.epam.reportportal:client-java:5.1.16'
 }
 
-test {
-    useJUnitPlatform()
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'gr8.tech'
+            artifactId = 'testrail-extension'
+            version = "1.0-SNAPSHOT"
+            from components.java
+            pom {
+                name = 'Testrail Extension'
+                description = 'Adding the TestRail integration for the project'
+            }
+        }
+    }
+    repositories {
+        maven {
+            url "https://maven.pkg.jetbrains.space/gr8-tech/p/main/maven"
+            credentials {
+                username = spaceUsername
+                password = spacePassword
+            }
+        }
+    }
 }
