@@ -92,7 +92,7 @@ public class TestRailClient {
         Date date = new Date();
         return TestRunDto.builder()
                 .suiteId("25088")
-                .name(format("Test run for %s - %s", config.testRunName(), formatter.format(date)))
+                .name(format("%s - %s", config.testRunName(), formatter.format(date)))
                 .includeAll(false)
                 .caseIds(new int[0])
                 .build();

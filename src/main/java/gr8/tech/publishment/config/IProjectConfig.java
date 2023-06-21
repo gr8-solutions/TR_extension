@@ -20,6 +20,7 @@ public interface IProjectConfig extends Config {
     @Key("tr.project.id")
     String projectId();
 
+    @DefaultValue("")
     @Key("tr.run.name")
     String testRunName();
 }
