@@ -27,7 +27,7 @@ public class TestRailExtension extends SummaryGeneratingListener implements Exte
     private static final Lock LOCK = new ReentrantLock();
     protected static final Map<String, Object[]> testResults = new HashMap<>();
     private final TestRailClient testRailClient = new TestRailClient();
-    private boolean isTestRunCreated = false;
+    private static boolean isTestRunCreated = false;
 
     @Override
     public void beforeAll(ExtensionContext context) {
