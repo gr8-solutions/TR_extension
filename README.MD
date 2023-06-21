@@ -3,7 +3,7 @@ This is a simple implementation of the TestRail integration into your test autom
 ## Get started
 1. Add to your test class/es, where tests you want to be integrated with TestRail, a JUnit annotation **@ExtendWith**, and pass to it parameter the **TestRailExtension.class**
 2. Create a file `resources/META-INF/services/org.junit.platform.launcher.TestExecutionListener` and add in it a single line: `gr8.tech.publishment.TestRailExtension`
-3. To match your tests with the test cases in the TestRail those tests must be annotated with the **@TestCaseId** annotation with a single String parameter **value**. The value must match the case id from the TestRail. Example:\
+3. To match your tests with the test cases in the TestRail those tests must be annotated with the **@TestRailId** annotation or with the **@TestCaseId** annotation (from ReportPortal extension) with a single String parameter **value**. The value must match the case id from the TestRail. Example:\
    `@TestCaseId("37973446")`\
    `@Test`\
    `void someTest() {}`\

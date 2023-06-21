@@ -45,7 +45,8 @@ public class TestRailExtension extends SummaryGeneratingListener implements Exte
     @Override
     public void testSuccessful(ExtensionContext context) {
         context.getElement().ifPresent(element -> {
-            if (element.isAnnotationPresent(TestCaseId.class) && TestRailClient.isTestRailEnabled()) {
+            if ((element.isAnnotationPresent(TestCaseId.class) || element.isAnnotationPresent(TestRailId.class))
+                    && TestRailClient.isTestRailEnabled()) {
                 saveResult(context, TestResultStatus.PASSED, EMPTY);
             }
         });
@@ -54,7 +55,8 @@ public class TestRailExtension extends SummaryGeneratingListener implements Exte
     @Override
     public void testFailed(ExtensionContext context, Throwable cause) {
         context.getElement().ifPresent(element -> {
-            if (element.isAnnotationPresent(TestCaseId.class) && TestRailClient.isTestRailEnabled()) {
+            if ((element.isAnnotationPresent(TestCaseId.class) || element.isAnnotationPresent(TestRailId.class))
+                    && TestRailClient.isTestRailEnabled()) {
                 saveResult(context, TestResultStatus.FAILED, cause.getMessage());
             }
         });
@@ -63,7 +65,8 @@ public class TestRailExtension extends SummaryGeneratingListener implements Exte
     @Override
     public void testDisabled(ExtensionContext context, Optional<String> reason) {
         context.getElement().ifPresent(element -> {
-            if (element.isAnnotationPresent(TestCaseId.class) && TestRailClient.isTestRailEnabled()) {
+            if ((element.isAnnotationPresent(TestCaseId.class) || element.isAnnotationPresent(TestRailId.class))
+                    && TestRailClient.isTestRailEnabled()) {
                 for (String caseId : getTestRailId(context).split(", ")) {
                     testResults.put(caseId, new Object[]{TestResultStatus.RETEST, reason.orElse("Unexpected reason")});
                 }
@@ -73,7 +76,9 @@ public class TestRailExtension extends SummaryGeneratingListener implements Exte
 
     private String getTestRailId(ExtensionContext context) {
         final String[] id = new String[1];
-        context.getElement().ifPresent(element -> id[0] = element.getAnnotation(TestCaseId.class).value());
+        context.getElement().ifPresent(element -> id[0] = element.isAnnotationPresent(TestCaseId.class)
+                ? element.getAnnotation(TestCaseId.class).value()
+                : element.getAnnotation(TestRailId.class).value());
         return id[0];
     }
 
@@ -84,11 +89,11 @@ public class TestRailExtension extends SummaryGeneratingListener implements Exte
     }
 
     private void saveResult(ExtensionContext context, TestResultStatus status, String message) {
-        int invocationNumber = getInvocationNumber(context);
         context.getTestMethod().ifPresent(method -> {
             if (method.getParameterCount() == 0) {
                 testResults.put(getTestRailId(context), new Object[]{status, message});
             } else {
+                int invocationNumber = getInvocationNumber(context);
                 testResults.put(getTestRailId(context).split(", ")[invocationNumber - 1], new Object[]{status, message});
             }
         });
