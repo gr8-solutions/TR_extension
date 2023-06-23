@@ -1,5 +1,6 @@
 # TestRail extension
-This is a simple implementation of the TestRail integration into your test automation project
+This is a simple implementation of the TestRail integration into your test automation project.\
+It works only on JUnit5
 ## Get started
 1. Add to your test class/es, where tests you want to be integrated with TestRail, a JUnit annotation **@ExtendWith**, and pass to it parameter the **TestRailExtension.class**
 2. Create a file `resources/META-INF/services/org.junit.platform.launcher.TestExecutionListener` and add in it a single line: `gr8.tech.publishment.TestRailExtension`
